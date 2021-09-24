@@ -1,0 +1,18 @@
+apiVersion: v1
+data:
+  server: OTVlZDY3ZjktYjhjOS1mNGI5LTIyOTQtOGFmNjgwM2FkMzkw
+kind: Secret
+metadata:
+  creationTimestamp: "2019-07-29T17:16:02Z"
+  name: vault-token-kafka
+  namespace: kafka
+  resourceVersion: "191427676"
+  selfLink: /api/v1/namespaces/kafka/secrets/vault-token-kafka
+  uid: 8a5b95e6-b224-11e9-a5bc-42010a8000fb
+type: Opaque
+
+
+kafka_vault_token=$(kubectl -n kafka get secret vault-token-kafka -o json | jq .data.server | sed 's/"//g' | base64 --decode)
+ kubectl create secret generic -n newkafka vault-token-kafka --from-literal="server=$kafka_vault_token"
+
+   kubectl delete secret -n newkafka vault-token-kafka
